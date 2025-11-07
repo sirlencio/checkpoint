@@ -6,9 +6,9 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdnb.artstation.com',
+        hostname: 'images.igdb.com',
         port: '',
-        pathname: '/p/assets/covers/images/**',
+        pathname: '/igdb/image/upload/**',
       },
     ],
   },

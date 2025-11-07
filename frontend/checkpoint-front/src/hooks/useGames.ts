@@ -1,10 +1,11 @@
 "use client";
 
+import { Game } from "@/types/game";
 import { useCallback, useEffect, useState } from "react";
 
 export const useGames = (params = {}) => {
 
-    const [games, setGames] = useState([]);
+    const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
