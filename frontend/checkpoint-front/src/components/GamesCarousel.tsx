@@ -4,18 +4,7 @@ import Image from "next/image"
 
 
 export default function GameCarousel() {
-  /*const games2: Game[] = [
-    { title: "Warhammer 40k: Space Marine 2", img: "/games/40k.jpg" },
-    { title: "Elden Ring", img: "/games/eldenring.jpg" },
-    { title: "God of War", img: "/games/gow.jpg" },
-    { title: "Cyberpunk 2077", img: "https://cdnb.artstation.com/p/assets/covers/images/033/037/923/large/artur-tarnowski-artur-tarnowski-coverart-thumbnail.jpg?1608208435" },
-    { title: "Hollow Knight", img: "/games/hollow.jpg" },
-    { title: "The Witcher III: Wild Hunt", img: "/games/witcher.jpg" },
-    { title: "Helldivers 2", img: "/games/HD2.jpg" },
-    { title: "Red Dead Redemption 2", img: "/games/rdr2.jpg" },
-    { title: "Age of Empires II Definitive Edition", img: "/games/AOE.jpg" },
-    { title: "The Last of Us: Parte 2", img: "/games/tlou2.jpg" },
-  ]*/
+  
 
   const { games, loading, error } = useGames();
 

@@ -9,7 +9,7 @@ export const MOCK_GAMES = [
     rating: 96.5,
     total_rating: 97.2,
 
-    cover: { id: 170637, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co3nnx.jpg" },
+    cover: { id: 170637, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co3nnx.jpg" },
 
     genres: [
       { id: 12, name: "Adventure" },
@@ -27,8 +27,8 @@ export const MOCK_GAMES = [
     ],
 
     screenshots: [
-      { id: 951639, url: "https://images.igdb.com/igdb/image/upload/t_thumb/sckeaf.jpg" },
-      { id: 951640, url: "https://images.igdb.com/igdb/image/upload/t_thumb/sckeag.jpg" },
+      { id: 951639, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/sckeaf.jpg" },
+      { id: 951640, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/sckeag.jpg" },
     ],
 
     videos: [
@@ -50,7 +50,7 @@ export const MOCK_GAMES = [
     rating: 92.3,
     total_rating: 93.8,
 
-    cover: { id: 86231, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co1ujb.jpg" },
+    cover: { id: 86231, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1ujb.jpg" },
 
     genres: [
       { id: 12, name: "Adventure" },
@@ -85,7 +85,7 @@ export const MOCK_GAMES = [
     rating: 95.0,
     total_rating: 95.7,
 
-    cover: { id: 212094, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co4jni.jpg" },
+    cover: { id: 212094, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co4jni.jpg" },
 
     genres: [
       { id: 12, name: "RPG" },
@@ -104,8 +104,8 @@ export const MOCK_GAMES = [
     ],
 
     screenshots: [
-      { id: 703441, url: "https://images.igdb.com/igdb/image/upload/t_thumb/scf2s1.jpg" },
-      { id: 487789, url: "https://images.igdb.com/igdb/image/upload/t_thumb/scagdp.jpg" },
+      { id: 703441, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/scf2s1.jpg" },
+      { id: 487789, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/scagdp.jpg" },
     ],
 
     videos: [
@@ -127,7 +127,7 @@ export const MOCK_GAMES = [
     rating: 94.5,
     total_rating: 94.8,
 
-    cover: { id: 85062, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co1tmu.jpg" },
+    cover: { id: 85062, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1tmu.jpg" },
 
     genres: [
       { id: 31, name: "Action" },
@@ -162,7 +162,7 @@ export const MOCK_GAMES = [
     rating: 86.1,
     total_rating: 88.2,
 
-    cover: { id: 480315, url: "https://images.igdb.com/igdb/image/upload/t_thumb/coaam3.jpg" },
+    cover: { id: 480315, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/coaam3.jpg" },
 
     genres: [
       { id: 12, name: "RPG" },
@@ -198,7 +198,7 @@ export const MOCK_GAMES = [
     rating: 90.0,
     total_rating: 90.4,
 
-    cover: { id: 424251, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co93cr.jpg" },
+    cover: { id: 424251, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co93cr.jpg" },
 
     genres: [
       { id: 8, name: "Platformer" },
@@ -234,7 +234,7 @@ export const MOCK_GAMES = [
     rating: 96.0,
     total_rating: 96.4,
 
-    cover: { id: 80403, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co1q1f.jpg" },
+    cover: { id: 80403, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1q1f.jpg" },
 
     genres: [
       { id: 31, name: "Action" },
@@ -270,7 +270,7 @@ export const MOCK_GAMES = [
     rating: 93.7,
     total_rating: 94.1,
 
-    cover: { id: 480513, url: "https://images.igdb.com/igdb/image/upload/t_thumb/coaarl.jpg" },
+    cover: { id: 480513, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/coaarl.jpg" },
 
     genres: [
       { id: 12, name: "RPG" },
@@ -306,7 +306,7 @@ export const MOCK_GAMES = [
     rating: 97.0,
     total_rating: 97.1,
 
-    cover: { id: 76371, url: "https://images.igdb.com/igdb/image/upload/t_thumb/co1mxf.jpg" },
+    cover: { id: 76371, url: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1mxf.jpg" },
 
     genres: [
       { id: 8, name: "Platformer" },
