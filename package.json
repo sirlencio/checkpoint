@@ -1,5 +1,5 @@
 {
-  "name": "checkpoint-front",
+  "name": "checkpoint",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "15.5.5",
+    "@next/third-parties": "^16.0.3",
+    "lucide-react": "^0.554.0",
+    "next": "^16.0.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

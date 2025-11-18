@@ -4,7 +4,7 @@ export interface Game {
   slug: string;
   summary: string;
   storyline: string;
-  first_release_date: string | number;
+  first_release_date: string;
   rating: number;
   total_rating: number;
   hypes?: number;
@@ -13,7 +13,7 @@ export interface Game {
   platforms: { id: number; name: string }[];
   companies: { id: number; name: string; role: string }[];
   screenshots: { id: number; url: string }[];
-  videos: { id: number; url: string }[];
+  videos: { id: number; video_id: string }[];
   remakes: number[];
   expansions: number[];
   franchises: number[];

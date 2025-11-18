@@ -1,35 +1,18 @@
-import { NextResponse } from "next/server";
-import { MOCK_GAMES } from "@/mocks/data/games";
+import { NextRequest, NextResponse } from "next/server";
+import { searchGames } from "@/lib/igdb";
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const genre = url.searchParams.get("genre");
-  const limit = url.searchParams.get("limit");
-  const id = url.searchParams.get("id");
-  const search = url.searchParams.get("search");
+export async function GET(req: NextRequest) {
+  try {
+    const search = req.nextUrl.searchParams.get("search");
+    console.log("Search term:", search);
 
-  let games = [...MOCK_GAMES];
+    if (!search) return NextResponse.json({ error: "No search term provided" }, { status: 400 });
 
-  if (id) {
-    games = games.filter((g) => g.id === Number(id));
+    const games = await searchGames(search);
+    return NextResponse.json(games);
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Error searching games" }, { status: 500 });
   }
-
-  if (search) {
-    const lower = search.toLowerCase();
-    games = games.filter((g) =>
-      g.name.toLowerCase().includes(lower)
-    );
-  }
-
-  if (genre) {
-    games = games.filter((g) =>
-      g.genres.some((x) => x.name.toLowerCase() === genre.toLowerCase())
-    );
-  }
-
-  if (limit) {
-    games = games.slice(0, Number(limit));
-  }
-
-  return NextResponse.json(games);
 }

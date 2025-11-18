@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -17,7 +18,6 @@ export default function Header() {
 
   return (
     <header className="bg-gray-800/90 backdrop-blur border-b border-gray-700 p-4 flex items-center justify-between">
-      
       {/* Logo y título envueltos en Link */}
       <Link href="/" className="flex items-center space-x-2">
         <Image
@@ -31,7 +31,10 @@ export default function Header() {
       </Link>
 
       {/* Searchbar centrada */}
-      <form onSubmit={handleSearch} className="relative w-[400px] flex justify-center">
+      <form
+        onSubmit={handleSearch}
+        className="relative w-[400px] flex justify-center"
+      >
         <input
           type="text"
           placeholder="Buscar videojuegos..."

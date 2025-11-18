@@ -1,9 +1,8 @@
 "use client";
 
 import { Game } from "@/types/game";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-
-const API_URL = "http://localhost:4000/api";
 
 interface UseGamesParams {
   searchTerm?: string;
@@ -15,6 +14,8 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const pathname = usePathname();
+
   const fetchGames = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -23,22 +24,19 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
       let endpoint = "";
 
       if (id) {
-        // Si recibimos un ID, buscamos ese juego concreto
-        endpoint = `${API_URL}/game/${id}`;
+        endpoint = `/api/game/${id}`;
       } else if (searchTerm) {
-        // Si recibimos un término de búsqueda, buscamos por nombre
-        endpoint = `${API_URL}/games/${encodeURIComponent(searchTerm)}`;
+        endpoint = `/api/games/${encodeURIComponent(searchTerm)}`;
       } else {
-        // Si no, traemos los juegos destacados
-        endpoint = `${API_URL}/games`;
+        endpoint = `/api/games/upcoming`;
       }
-      console.log("Fetching from endpoint:", endpoint);
+      
       const res = await fetch(endpoint);
+
       if (!res.ok) throw new Error("Error al obtener los juegos");
 
       const data = await res.json();
 
-      // Si buscamos por ID, la API devuelve un array con un solo juego
       setGames(Array.isArray(data) ? data : [data]);
     } catch (err) {
       if (err instanceof Error) setError(err.message);
@@ -50,7 +48,7 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
 
   useEffect(() => {
     fetchGames();
-  }, [fetchGames]);
+  }, [fetchGames, pathname]);
 
   return { games, loading, error, refetch: fetchGames };
 };
