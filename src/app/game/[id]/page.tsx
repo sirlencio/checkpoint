@@ -1,12 +1,16 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useGames } from "@/hooks/useGames";
 import Image from "next/image";
 import { YouTubeEmbed } from '@next/third-parties/google'
+import { use } from "react";
 
-export default function GameDetailPage() {
-  const { id } = useParams();
+export default function GameDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = use(params);
   const { games, loading, error } = useGames({ id: String(id) });
 
   const game = games.length > 0 ? games[0] : games[0];
