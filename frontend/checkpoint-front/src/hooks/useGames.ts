@@ -3,38 +3,54 @@
 import { Game } from "@/types/game";
 import { useCallback, useEffect, useState } from "react";
 
-export const useGames = (params = {}) => {
+const API_URL = "http://localhost:4000/api";
 
-    const [games, setGames] = useState<Game[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+interface UseGamesParams {
+  searchTerm?: string;
+  id?: string | number;
+}
 
-    const queryString = new URLSearchParams(params).toString();
+export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const fetchGames = useCallback(async () => {
-        setLoading(true);
-        setError(null);
+  const fetchGames = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-        try {
-            const res = await fetch(`/api/games?${queryString}`);
-            if (!res.ok) throw new Error("Error fetching games");
+    try {
+      let endpoint = "";
 
-            const data = await res.json();
-            setGames(data);
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError(String(err));
-            }
-        } finally {
-            setLoading(false);
-        }
-    }, [queryString]);
+      if (id) {
+        // Si recibimos un ID, buscamos ese juego concreto
+        endpoint = `${API_URL}/game/${id}`;
+      } else if (searchTerm) {
+        // Si recibimos un término de búsqueda, buscamos por nombre
+        endpoint = `${API_URL}/games/${encodeURIComponent(searchTerm)}`;
+      } else {
+        // Si no, traemos los juegos destacados
+        endpoint = `${API_URL}/games`;
+      }
+      console.log("Fetching from endpoint:", endpoint);
+      const res = await fetch(endpoint);
+      if (!res.ok) throw new Error("Error al obtener los juegos");
 
-    useEffect(() => {
-        fetchGames();
-    }, [fetchGames]);
+      const data = await res.json();
 
-    return { games, loading, error, refetch: fetchGames };
+      // Si buscamos por ID, la API devuelve un array con un solo juego
+      setGames(Array.isArray(data) ? data : [data]);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+      else setError(String(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [searchTerm, id]);
+
+  useEffect(() => {
+    fetchGames();
+  }, [fetchGames]);
+
+  return { games, loading, error, refetch: fetchGames };
 };

@@ -5,7 +5,7 @@ export default function Layout({
 }) {
   return (
     <>
-        <p>Esto es el layout</p>
+        
         <main>{children}</main>
     </>
 
