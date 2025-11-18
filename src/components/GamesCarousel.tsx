@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useGames } from "@/hooks/useGames";
 import Image from "next/image";
 import Link from "next/link";
