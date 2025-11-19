@@ -1,8 +1,7 @@
 "use client";
 
 import { Game } from "@/types/game";
-import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface UseGamesParams {
   searchTerm?: string;
@@ -10,11 +9,9 @@ interface UseGamesParams {
 }
 
 export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Game[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const pathname = usePathname();
 
   const fetchGames = useCallback(async () => {
     setLoading(true);
@@ -30,25 +27,25 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
       } else {
         endpoint = `/api/games/upcoming`;
       }
-      
-      const res = await fetch(endpoint);
 
+      const res = await fetch(endpoint);
       if (!res.ok) throw new Error("Error al obtener los juegos");
 
       const data = await res.json();
 
-      setGames(Array.isArray(data) ? data : [data]);
+      setGames(Array.isArray(data) ? data : [data]); // Garantiza que siempre sea array
     } catch (err) {
       if (err instanceof Error) setError(err.message);
       else setError(String(err));
+      setGames([]); // Evita que games sea null al render
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, id]);
+  }, [id, searchTerm]);
 
   useEffect(() => {
     fetchGames();
-  }, [fetchGames, pathname]);
+  }, [fetchGames]); // Depende solo de id o searchTerm
 
   return { games, loading, error, refetch: fetchGames };
 };

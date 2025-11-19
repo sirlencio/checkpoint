@@ -88,7 +88,7 @@ async function resolveCompanies(companyIds: number[]): Promise<{ id: number, nam
 
 // A partir de una lista de IDs de covers, obtener sus URLs completas
 async function resolveCover(coverID?: number): Promise<{ id: number; url: string }> {
-    if (!coverID) return {id: 0, url: ""};
+    if (!coverID) return { id: 0, url: "" };
     const body = `fields image_id; where id = ${coverID};`;
     const covers = await igdbFetch("covers", body);
     const c: RawCovers = covers[0];
@@ -144,11 +144,7 @@ export async function getGameById(id: number): Promise<Game | null> {
         slug: raw.slug,
         summary: raw.summary ?? "",
         storyline: raw.storyline ?? "",
-        first_release_date: new Date(raw.first_release_date * 1000).toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        }),
+        first_release_date: new Date(raw.first_release_date * 1000).toISOString(),
         rating: raw.rating ?? null,
         total_rating: raw.total_rating ?? 0,
         hypes: raw.hypes,
@@ -202,11 +198,7 @@ export async function getUpcomingPopularGames(): Promise<Game[]> {
                 slug: raw.slug,
                 summary: raw.summary ?? "",
                 storyline: raw.storyline ?? "",
-                first_release_date: new Date(raw.first_release_date * 1000).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                }),
+                first_release_date: new Date(raw.first_release_date * 1000).toISOString(),
                 rating: raw.rating ?? 0,
                 total_rating: raw.total_rating ?? 0,
                 hypes: raw.hypes,
@@ -257,11 +249,7 @@ export async function searchGames(search: string): Promise<Game[]> {
                 slug: raw.slug,
                 summary: raw.summary ?? "",
                 storyline: raw.storyline ?? "",
-                first_release_date: new Date(raw.first_release_date * 1000).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                }),
+                first_release_date: new Date(raw.first_release_date * 1000).toISOString(),
                 rating: raw.rating ?? 0,
                 total_rating: raw.total_rating ?? 0,
                 hypes: raw.hypes,

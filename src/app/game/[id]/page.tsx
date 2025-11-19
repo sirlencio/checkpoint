@@ -13,13 +13,16 @@ export default function GameDetailPage({
   const { id } = use(params);
   const { games, loading, error } = useGames({ id: String(id) });
 
-  const game = games.length > 0 ? games[0] : games[0];
-
   if (loading)
     return <p className="text-white text-center mt-10">Cargando...</p>;
-  if (error) return <p className="text-red-400 text-center mt-10">{error}</p>;
-  if (!game)
-    return <p className="text-white text-center mt-10">Juego no encontrado</p>;
+
+  if (error)
+    return <p className="text-red-400 text-center mt-10">{error}</p>;
+
+  if (!games || games.length === 0)
+    return <p className="text-gray-400 text-center mt-10">Juego no encontrado</p>;
+
+  const game = games[0];
 
   return (
     <div
@@ -82,9 +85,11 @@ export default function GameDetailPage({
             {/* Video */}
             {game.videos?.length > 0 && (
               <div className="mt-6">
-                <h2 className="text-2xl font-semibold mb-2 text-green-400">Trailer</h2>
+                <h2 className="text-2xl font-semibold mb-2 text-green-400">
+                  Trailer
+                </h2>
                 <div className="aspect-video rounded-lg overflow-hidden shadow-lg">
-                  <YouTubeEmbed videoid={game.videos[0].video_id}/>
+                  <YouTubeEmbed videoid={game.videos[0].video_id} />
                 </div>
               </div>
             )}
@@ -94,7 +99,9 @@ export default function GameDetailPage({
         {/* Capturas */}
         {game.screenshots?.length > 0 && (
           <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-4 text-green-400 text-center">Capturas</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-green-400 text-center">
+              Capturas
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {game.screenshots.map((s) => (
                 <Image
