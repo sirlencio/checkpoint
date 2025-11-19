@@ -18,3 +18,19 @@ export interface Game {
   expansions: number[];
   franchises: number[];
 }
+
+export interface UpcomingGame {
+  id: number;
+  name: string;
+  cover: { id: number; url: string } | null;
+}
+
+export interface SearchGame {
+  id: number;
+  name: string;
+  summary: string;
+  rating: number;
+  cover: { id: number; url: string } | null;
+  genres: { id: number; name: string }[];
+  platforms: { id: number; name: string }[];
+}

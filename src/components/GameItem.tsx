@@ -1,11 +1,11 @@
 "use client";
 
-import { Game } from "@/types/game";
+import { SearchGame } from "@/types/game";
 import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
-  game: Game;
+  game: SearchGame;
 }
 
 export default function GameItem({ game }: Props) {
@@ -17,7 +17,7 @@ export default function GameItem({ game }: Props) {
       {game.cover?.url ? (
         <div className="relative w-40 h-64 flex-shrink-0">
           <Image
-            src={`https:${game.cover.url.replace("t_thumb", "t_cover_big")}`}
+            src={game.cover.url}
             alt={game.name}
             fill
             className="object-cover rounded-lg"

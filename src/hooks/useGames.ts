@@ -23,11 +23,12 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
       if (id) {
         endpoint = `/api/game/${id}`;
       } else if (searchTerm) {
-        endpoint = `/api/games/${encodeURIComponent(searchTerm)}`;
+        endpoint = `/api/games/${searchTerm}`;
       } else {
         endpoint = `/api/games/upcoming`;
       }
 
+      console.log("Fetching games from:", endpoint);
       const res = await fetch(endpoint);
       if (!res.ok) throw new Error("Error al obtener los juegos");
 
