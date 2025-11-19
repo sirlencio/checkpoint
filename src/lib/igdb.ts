@@ -1,4 +1,4 @@
-import { Game } from "@/types/game";
+import { Game, SearchGame, UpcomingGame } from "@/types/game";
 
 const BASE_URL = "https://api.igdb.com/v4";
 
@@ -183,35 +183,13 @@ export async function getUpcomingPopularGames(): Promise<Game[]> {
 
     const games: Game[] = await Promise.all(
         rawGames.map(async (raw: RawGame) => {
-            const [videos, screenshots, companies, cover, genres, platforms] = await Promise.all([
-                resolveVideos(raw.videos || []),
-                resolveScreenshots(raw.screenshots || []),
-                resolveCompanies(raw.involved_companies || []),
-                resolveCover(raw.cover),
-                resolveGenres(raw.genres),
-                resolvePlatforms(raw.platforms)
-            ]);
+            const cover = await resolveCover(raw.cover);
 
             return {
                 id: raw.id,
                 name: raw.name,
-                slug: raw.slug,
-                summary: raw.summary ?? "",
-                storyline: raw.storyline ?? "",
-                first_release_date: new Date(raw.first_release_date * 1000).toISOString(),
-                rating: raw.rating ?? 0,
-                total_rating: raw.total_rating ?? 0,
-                hypes: raw.hypes,
                 cover,
-                genres,
-                platforms,
-                companies,
-                screenshots,
-                videos,
-                remakes: raw.remakes ?? [],
-                expansions: raw.expansions ?? [],
-                franchises: raw.franchises ?? [],
-            } as Game;
+            } as UpcomingGame;
         })
     );
 
@@ -234,10 +212,7 @@ export async function searchGames(search: string): Promise<Game[]> {
 
     const games: Game[] = await Promise.all(
         rawGames.map(async (raw: RawGame) => {
-            const [videos, screenshots, companies, cover, genres, platforms] = await Promise.all([
-                resolveVideos(raw.videos || []),
-                resolveScreenshots(raw.screenshots || []),
-                resolveCompanies(raw.involved_companies || []),
+            const [cover, genres, platforms] = await Promise.all([
                 resolveCover(raw.cover),
                 resolveGenres(raw.genres),
                 resolvePlatforms(raw.platforms)
@@ -246,23 +221,12 @@ export async function searchGames(search: string): Promise<Game[]> {
             return {
                 id: raw.id,
                 name: raw.name,
-                slug: raw.slug,
                 summary: raw.summary ?? "",
-                storyline: raw.storyline ?? "",
-                first_release_date: new Date(raw.first_release_date * 1000).toISOString(),
                 rating: raw.rating ?? 0,
-                total_rating: raw.total_rating ?? 0,
-                hypes: raw.hypes,
                 cover,
                 genres,
                 platforms,
-                companies,
-                screenshots,
-                videos,
-                remakes: raw.remakes ?? [],
-                expansions: raw.expansions ?? [],
-                franchises: raw.franchises ?? [],
-            } as Game;
+            } as SearchGame;
         })
     );
 

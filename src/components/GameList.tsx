@@ -4,7 +4,7 @@ import { Game } from "@/types/game";
 import GameItem from "./GameItem";
 
 interface Props {
-  games: Game[];
+  games: Game[] | null;
 }
 
 export default function GameList({ games }: Props) {

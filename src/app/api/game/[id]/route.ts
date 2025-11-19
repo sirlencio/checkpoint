@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getGameById } from "@/lib/igdb";
 import { getGameRow, upsertGame } from "@/lib/repositories/gamesRepo";
 import { upsertGenres, linkGameGenres } from "@/lib/repositories/genresRepo";
@@ -11,7 +11,7 @@ import { buildFullGameFromDB } from "@/lib/repositories/buildFullGameFromDB";
 import { createClient } from "@/utils/supabase/server";
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: number }> }
 ) {
   const {id} = await params;
