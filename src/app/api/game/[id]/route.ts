@@ -14,7 +14,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: number }> }
 ) {
-  const {id} = await params;
+  const { id } = await params;
 
   const supabase = await createClient();
 
@@ -27,13 +27,13 @@ export async function GET(
       const enriched = await buildFullGameFromDB(supabase, id);
       return NextResponse.json(enriched);
     }
-    
+
     // 3. Sino -> fetch IGDB
     const game = await getGameById(id);
     if (!game) return NextResponse.json({ error: "Game not found" }, { status: 404 });
 
     // 4. Guardar datos principales
-    const a = await upsertGame(supabase,{
+    const a = await upsertGame(supabase, {
       id: game.id,
       name: game.name,
       slug: game.slug,
@@ -74,10 +74,19 @@ export async function GET(
 
     return NextResponse.json(fullGame);
 
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "Error desconocido";
+
+    if (message === "Rate limit exceeded") {
+      return new NextResponse(
+        JSON.stringify({ error: "Rate limit exceeded" }),
+        { status: 429 }
+      );
+    }
+
+    return new NextResponse(
+      JSON.stringify({ error: message }),
       { status: 500 }
     );
   }

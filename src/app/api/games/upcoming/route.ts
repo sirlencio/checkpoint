@@ -6,10 +6,19 @@ export async function GET() {
         const games = await getUpcomingPopularGames();
 
         return NextResponse.json(games);
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json(
-            { error: "Error al obtener el juego" },
+    } catch (err: unknown) {
+        const message =
+            err instanceof Error ? err.message : "Error desconocido";
+
+        if (message === "Rate limit exceeded") {
+            return new NextResponse(
+                JSON.stringify({ error: "Rate limit exceeded" }),
+                { status: 429 }
+            );
+        }
+
+        return new NextResponse(
+            JSON.stringify({ error: message }),
             { status: 500 }
         );
     }

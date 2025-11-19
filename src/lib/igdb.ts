@@ -51,6 +51,9 @@ async function igdbFetch(endpoint: string, body: string) {
         },
         body,
     });
+    if (res.status === 429) {
+        throw new Error("Rate limit exceeded");
+    }
     return res.json();
 }
 
