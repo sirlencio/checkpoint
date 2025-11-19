@@ -30,7 +30,15 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
 
       console.log("Fetching games from:", endpoint);
       const res = await fetch(endpoint);
-      if (!res.ok) throw new Error("Error al obtener los juegos");
+
+      if (res.status === 429) {
+        throw new Error("Has superado el límite de peticiones. Inténtalo en unos segundos.");
+      }
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Error al obtener los juegos");
+      }
 
       const data = await res.json();
 
