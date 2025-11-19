@@ -4,11 +4,11 @@ export interface Game {
   slug: string;
   summary: string;
   storyline: string;
-  first_release_date: string;
+  first_release_date: string | null;
   rating: number;
   total_rating: number;
   hypes?: number;
-  cover: { id: number; url: string };
+  cover: { id: number; url: string } | null;
   genres: { id: number; name: string }[];
   platforms: { id: number; name: string }[];
   companies: { id: number; name: string; role: string }[];
