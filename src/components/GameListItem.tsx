@@ -8,7 +8,7 @@ interface Props {
   game: SearchGame;
 }
 
-export default function GameItem({ game }: Props) {
+export default function GameListItem({ game }: Props) {
   return (
     <Link href={`/game/${game.id}`} className="w-full">
     <div className="flex bg-gray-800 rounded-2xl overflow-hidden shadow-lg p-4 w-full max-w-4xl mx-auto mb-6 hover:scale-105 transition-transform duration-300 gap-6">

@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
+import { use } from "react";
 import { useGames } from "@/hooks/useGames";
-import GameList from "@/components/GameList";
+import GamesList from "@/components/GamesList";
 
 interface Props {
   params: Promise<{ gameName: string }>;
 }
 
 export default function SearchPage({ params }: Props) {
-  const { gameName } = React.use(params);
+  const { gameName } = use(params);
 
   const decodedName = decodeURIComponent(gameName);
 
@@ -25,7 +25,7 @@ export default function SearchPage({ params }: Props) {
         {loading && <p className="text-center text-white mt-10">Cargando...</p>}
         {error && <p className="text-center text-red-400 mt-10">{error}</p>}
 
-        {!loading && !error && <GameList games={games} />}
+        {!loading && !error && <GamesList games={games} />}
       </div>
     </main>
   );
