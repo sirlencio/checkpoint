@@ -1,4 +1,4 @@
-import GameCarousel from "@/components/GamesCarousel";
+import GameGrid from "@/components/GamesGrid";
 
 export default function HomePage() {
   return (
@@ -13,7 +13,7 @@ export default function HomePage() {
       </div>
 
       <div className="w-full max-w-6xl">
-        <GameCarousel />
+        <GameGrid />
       </div>
     </main>
   );
