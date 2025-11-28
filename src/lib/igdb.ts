@@ -1,44 +1,7 @@
 import { Game, SearchGame, UpcomingGame } from "@/types/game";
+import { RawCompany, RawCovers, RawGame, RawInvolvedCompany, RawScreenshots, RawVideo, ResolvedCompany } from "@/types/igdb";
 
 const BASE_URL = "https://api.igdb.com/v4";
-
-interface RawVideo {
-    id: number;
-    video_id: string;
-}
-interface RawScreenshots {
-    id: number;
-    image_id: string;
-}
-interface RawCompanies {
-    id: number;
-    name: string;
-    role: string;
-}
-interface RawCovers {
-    id: number;
-    image_id: string;
-}
-interface RawGame {
-    id: number;
-    name: string;
-    slug: string;
-    summary?: string;
-    storyline?: string;
-    first_release_date: number;
-    rating?: number;
-    total_rating?: number;
-    hypes?: number;
-    cover?: number;
-    genres?: number[];
-    platforms?: number[];
-    involved_companies?: number[];
-    screenshots?: number[];
-    videos?: number[];
-    remakes?: number[];
-    expansions?: number[];
-    franchises?: number[];
-}
 
 async function igdbFetch(endpoint: string, body: string) {
     const res = await fetch(`${BASE_URL}/${endpoint}`, {
@@ -80,14 +43,42 @@ async function resolveScreenshots(screenshotIds: number[]): Promise<{ id: number
 }
 
 // A partir de una lista de IDs de compañías, obtener sus nombres y roles
-async function resolveCompanies(companyIds: number[]): Promise<{ id: number, name: string, role: string }[]> {
-    if (!companyIds?.length) return [];
-    const body = `fields company.name, role; where id = (${companyIds.join(',')});`;
-    const companies = await igdbFetch("involved_companies", body);
-    return companies.map((c: RawCompanies) => (
-        { id: c.id, name: c.name, role: c.role }
-    ));
+async function resolveCompanies(involvedCompanyIds: number[]): Promise<ResolvedCompany[]> {
+    if (!involvedCompanyIds?.length) return [];
+
+    // 1) Obtener los involved_companies
+    const bodyInvolved = `
+        fields company, developer, publisher, supporting;
+        where id = (${involvedCompanyIds.join(',')});
+    `;
+    const involved: RawInvolvedCompany[] = await igdbFetch("involved_companies", bodyInvolved);
+
+    // 2) IDs reales de compañías
+    const companyIds = [...new Set(involved.map((ic) => ic.company))];
+
+    // 3) Obtener nombres de compañías
+    const bodyCompanies = `
+        fields name;
+        where id = (${companyIds.join(',')});
+    `;
+    const companies: RawCompany[] = await igdbFetch("companies", bodyCompanies);
+
+    const companyMap = new Map<number, string>(
+        companies.map((c) => [c.id, c.name])
+    );
+
+    // 4) Combinar roles + nombre
+    return involved.map((ic): ResolvedCompany => ({
+        id: ic.company,
+        name: companyMap.get(ic.company) ?? "Unknown",
+        role:
+            ic.developer ? "developer" :
+                ic.publisher ? "publisher" :
+                    ic.supporting ? "supporting" :
+                        "unknown",
+    }));
 }
+
 
 // A partir de una lista de IDs de covers, obtener sus URLs completas
 async function resolveCover(coverID?: number): Promise<{ id: number; url: string }> {
@@ -98,14 +89,6 @@ async function resolveCover(coverID?: number): Promise<{ id: number; url: string
     return { id: c.id, url: `https://images.igdb.com/igdb/image/upload/t_cover_big/${c.image_id}.jpg` };
 }
 
-// A partir de una lista de IDs de géneros, obtener sus nombres
-async function resolveGenres(genreIds?: number[]): Promise<{ id: number; name: string }[]> {
-    if (!genreIds?.length) return [];
-    const body = `fields name; where id = (${genreIds.join(',')});`;
-    const genres = await igdbFetch("genres", body);
-    return genres.map((g: { id: number; name: string }) => ({ id: g.id, name: g.name }));
-}
-
 // A partir de una lista de IDs de plataformas, obtener sus nombres
 async function resolvePlatforms(platformIds?: number[]): Promise<{ id: number; name: string }[]> {
     if (!platformIds?.length) return [];
@@ -114,6 +97,12 @@ async function resolvePlatforms(platformIds?: number[]): Promise<{ id: number; n
     return platforms.map((p: { id: number; name: string }) => ({ id: p.id, name: p.name }));
 }
 
+async function resolveFranchises(franchiseIds?: number[]): Promise<{ id: number; name: string }[]> {
+    if (!franchiseIds?.length) return [];
+    const body = `fields id, name; where id = (${franchiseIds.join(',')});`;
+    const franchises = await igdbFetch("franchises", body);
+    return franchises.map((f: { id: number; name: string }) => ({ id: f.id, name: f.name }));
+}
 
 
 // Funciónes
@@ -121,9 +110,9 @@ async function resolvePlatforms(platformIds?: number[]): Promise<{ id: number; n
 //Obtener un juego por su ID
 export async function getGameById(id: number): Promise<Game | null> {
     const body = `
-    fields name, slug, summary, storyline, first_release_date, rating, total_rating,
-           hypes, cover, genres, platforms, involved_companies, screenshots, videos,
-           remakes, expansions, franchises;
+    fields name, slug, summary, first_release_date, rating, total_rating, hypes,
+           cover, genres, platforms, involved_companies, screenshots, videos, parent_game,
+           remakes, expansions, dlcs, remasters, standalone_expansions, franchises, updated_at, game_type;
     where id = ${id};
   `;
 
@@ -132,13 +121,13 @@ export async function getGameById(id: number): Promise<Game | null> {
 
     const raw = games[0];
 
-    const [videos, screenshots, companies, cover, genres, platforms] = await Promise.all([
-        resolveVideos(raw.videos || []),
-        resolveScreenshots(raw.screenshots || []),
-        resolveCompanies(raw.involved_companies || []),
+    const [videos, screenshots, companies, cover, platforms, franchises] = await Promise.all([
+        resolveVideos(raw.videos),
+        resolveScreenshots(raw.screenshots),
+        resolveCompanies(raw.involved_companies),
         resolveCover(raw.cover),
-        resolveGenres(raw.genres),
-        resolvePlatforms(raw.platforms)
+        resolvePlatforms(raw.platforms),
+        resolveFranchises(raw.franchises)
     ]);
 
     const game: Game = {
@@ -146,22 +135,61 @@ export async function getGameById(id: number): Promise<Game | null> {
         name: raw.name,
         slug: raw.slug,
         summary: raw.summary ?? "",
-        storyline: raw.storyline ?? "",
-        first_release_date: new Date(raw.first_release_date * 1000).toISOString(),
-        rating: raw.rating ?? null,
+        first_release_date: new Date(raw.first_release_date * 1000).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        }),
+        rating: raw.rating ?? 0,
         total_rating: raw.total_rating ?? 0,
         hypes: raw.hypes,
-        cover,
-        genres,
-        platforms,
-        companies,
-        screenshots,
-        videos,
+        cover: cover,
+        genres: raw.genres?.map((gId: number) => ({ id: gId, name: "" })) || [],
+        platforms: platforms,
+        companies: companies ?? [],
+        screenshots: screenshots ?? [],
+        videos: videos ?? [],
+        parent_game: raw.parent_game,
         remakes: raw.remakes ?? [],
         expansions: raw.expansions ?? [],
-        franchises: raw.franchises ?? [],
+        dlcs: raw.dlcs ?? [],
+        remasters: raw.remasters ?? [],
+        standalone_expansions: raw.standalone_expansions ?? [],
+        franchises: franchises ?? [],
+        updated_at: new Date(raw.updated_at * 1000).toUTCString(),
+        game_type: raw.game_type
     };
 
+    return game;
+}
+
+export async function getPartialGameById(id: number): Promise<SearchGame | null> {
+    const body = `
+    where id = ${id};
+    fields id, name, slug, first_release_date, cover, updated_at;
+    limit 1;
+  `;
+
+    const rawGames = await igdbFetch("games", body);
+    if (!rawGames?.length) return null;
+
+    const raw = rawGames[0];
+    const cover = await resolveCover(raw.cover);
+
+    const game: SearchGame = {
+        id: raw.id,
+        name: raw.name,
+        slug: raw.slug,
+        first_release_date: raw.first_release_date
+            ? new Date(raw.first_release_date * 1000).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            })
+            : null,
+        cover,
+        updated_at: new Date(raw.updated_at * 1000).toUTCString()
+    };
 
     return game;
 }
@@ -173,10 +201,8 @@ export async function getUpcomingPopularGames(): Promise<Game[]> {
     const future = now + threeMonths;
 
     const body = `
-        fields name, slug, summary, storyline, first_release_date, rating, total_rating,
-               hypes, cover, genres, platforms, involved_companies, screenshots, videos,
-               remakes, expansions, franchises;
-        where first_release_date >= ${now} & first_release_date <= ${future} & hypes != null & hypes > 0;
+        fields name, slug, hypes, cover, first_release_date;
+        where first_release_date >= ${now} & first_release_date <= ${future} & hypes != null & hypes > 0 & game_type = (0,1,2,4,8,9);
         sort hypes desc;
         limit 20;
     `;
@@ -204,10 +230,9 @@ export async function getUpcomingPopularGames(): Promise<Game[]> {
 export async function searchGames(search: string): Promise<Game[]> {
     const body = `
     search "${search}";
-    fields name, slug, summary, storyline, first_release_date, rating, total_rating,
-           hypes, cover, genres, platforms, involved_companies, screenshots, videos,
-           remakes, expansions, franchises;
-    limit 20;
+    where game_type = (0,1,2,4,8,9);
+    fields id, name, slug, first_release_date, cover, updated_at;
+    limit 10;
   `;
 
     const rawGames = await igdbFetch("games", body);
@@ -215,23 +240,35 @@ export async function searchGames(search: string): Promise<Game[]> {
 
     const games: Game[] = await Promise.all(
         rawGames.map(async (raw: RawGame) => {
-            const [cover, genres, platforms] = await Promise.all([
-                resolveCover(raw.cover),
-                resolveGenres(raw.genres),
-                resolvePlatforms(raw.platforms)
-            ]);
-
+            const cover = await resolveCover(raw.cover);
             return {
                 id: raw.id,
                 name: raw.name,
-                summary: raw.summary ?? "",
-                rating: raw.rating ?? 0,
+                slug: raw.slug,
+                first_release_date: raw.first_release_date
+                    ? new Date(raw.first_release_date * 1000).toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })
+                    : null,
                 cover,
-                genres,
-                platforms,
+                updated_at: new Date(raw.updated_at * 1000).toUTCString()
             } as SearchGame;
         })
     );
 
     return games;
+}
+
+/**
+ * Obtiene todos los géneros disponibles de IGDB
+ * @returns Una promesa que resuelve a una lista de géneros con sus IDs, nombres y timestamps de actualización
+ */
+export async function getGenres(): Promise<{ id: number, name: string, updated_at: number }[]> {
+    const body = `fields id, name, updated_at; limit 500;`;
+    const genres = await igdbFetch("genres", body);
+    return genres.map((g: { id: number, name: string, updated_at: number }) => (
+        { id: g.id, name: g.name, updated_at: g.updated_at }
+    ));
 }

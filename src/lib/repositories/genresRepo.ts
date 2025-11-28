@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export async function upsertGenres(supabase: SupabaseClient, genres: { id: number, name: string }[]) {
+export async function upsertGenres(supabase: SupabaseClient, genres: { id: number, name: string, updated_at: string }[]) {
     if (!genres.length) return;
     await supabase.from("genres").upsert(genres);
 }
