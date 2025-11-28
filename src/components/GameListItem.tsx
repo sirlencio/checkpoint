@@ -33,18 +33,6 @@ export default function GameListItem({ game }: Props) {
       <div className="flex flex-col justify-between flex-1">
         <div>
           <h2 className="text-3xl font-bold text-white mb-3">{game.name}</h2>
-
-          <p className="text-lg text-gray-200 mb-3">{game.summary}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-4 text-sm text-gray-300 mt-4">
-          {game.genres?.length > 0 && (
-            <span>🎮 Géneros: {game.genres.map(g => g.name).join(", ")}</span>
-          )}
-          {game.platforms?.length > 0 && (
-            <span>🖥️ Plataformas: {game.platforms.map(p => p.name).join(", ")}</span>
-          )}
-          {game.rating && <span>⭐ Rating: {Math.round(game.rating)} / 100</span>}
         </div>
       </div>
 

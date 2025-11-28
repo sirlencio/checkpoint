@@ -107,14 +107,7 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
     name: game.name,
     slug: game.slug,
     summary: game.summary ?? "",
-    storyline: game.storyline ?? "",
-    first_release_date: game.first_release_date
-      ? new Date(game.first_release_date).toLocaleDateString("es-ES", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      : null,
+    first_release_date: game.first_release_date,
     rating: game.rating ?? null,
     total_rating: game.total_rating ?? 0,
     cover,
@@ -126,5 +119,7 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
     remakes: remakes?.map((r) => r.remake_id) ?? [],
     expansions: expansions?.map((e) => e.expansion_id) ?? [],
     franchises: franchises?.map((f) => f.franchise_id) ?? [],
+    updated_at: game.updated_at,
+    game_type: game.game_type
   };
 }

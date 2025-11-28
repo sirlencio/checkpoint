@@ -2,15 +2,18 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function saveRelations(supabase: SupabaseClient,
   gameId: number,
-  table: "game_remakes" | "game_expansions" | "game_franchises",
-  ids: number[]
+  relations: { id: number; type: string }[]
 ) {
-  if (!ids.length) return;
+  if (!relations.length) return;
 
   await supabase
-    .from(table)
-    .upsert(ids.map(id => ({
-      game_id: gameId,
-      [`${table.split("_")[1]}_id`]: id
-    })));
+    .from("game_relations")
+    .upsert(
+      relations.map(rel => ({
+        game_id: gameId,
+        related_id: rel.id,
+        type: rel.type
+      }))
+    );
 }
+
