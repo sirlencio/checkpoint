@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className="bg-gray-900 text-white flex flex-col min-h-screen"
+        className="bg-gray-900 text-white flex flex-col min-h-screen "
         style={{
           backgroundImage: "url('https://wallpapers.com/images/hd/titanfall-2-4k-gaming-upm0ozmh3a7m8i4s.jpg')",
           backgroundSize: "cover",
