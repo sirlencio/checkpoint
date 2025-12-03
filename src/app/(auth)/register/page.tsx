@@ -1,3 +1,5 @@
+import Register from "@/components/Register";
+
 export default async function Page() {
-  return <h1>Register Page</h1>;
+  return <Register />;
 }

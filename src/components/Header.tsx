@@ -17,7 +17,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-gray-800/90 backdrop-blur border-b border-gray-700 p-4 flex items-center justify-between">
+    <header className="bg-gray-800/90 backdrop-blur border-b border-gray-700 p-4 flex items-center justify-between drop-shadow-[1px_1px_2px_black]">
       {/* Logo y título envueltos en Link */}
       <Link href="/" className="flex items-center space-x-2">
         <Image
@@ -50,11 +50,11 @@ export default function Header() {
         <Link href="/" className="hover:text-green-400 transition">
           Inicio
         </Link>
-        <Link href="/library" className="hover:text-green-400 transition">
-          Mis Juegos
+        <Link href="/login" className="hover:text-green-400 transition">
+          Log In
         </Link>
-        <Link href="/stats" className="hover:text-green-400 transition">
-          Estadísticas
+        <Link href="/register" className="hover:text-green-400 transition">
+          Register
         </Link>
       </nav>
     </header>

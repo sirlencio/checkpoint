@@ -204,7 +204,7 @@ export async function getUpcomingPopularGames(): Promise<Game[]> {
         fields name, slug, hypes, cover, first_release_date;
         where first_release_date >= ${now} & first_release_date <= ${future} & hypes != null & hypes > 0 & game_type = (0,1,2,4,8,9);
         sort hypes desc;
-        limit 20;
+        limit 14;
     `;
 
     const rawGames = await igdbFetch("games", body);

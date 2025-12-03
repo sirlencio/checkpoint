@@ -1,3 +1,9 @@
+import Login from "@/components/Login";
+
 export default async function Page() {
-  return <h1>Login Page</h1>;
+  return (
+    <>
+      <Login />
+    </>
+  );
 }
