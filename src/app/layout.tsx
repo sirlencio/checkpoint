@@ -1,15 +1,13 @@
-"use client"
-
 import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { AuthProvider } from "./providers/AuthProvider";
+import Providers from "./providers/providers";
 
-/* export const metadata: Metadata = {
+export const metadata: Metadata = {
   title: "CheckPoint",
   description: "Tu tracker de videojuegos",
-}; */
+};
 
 export default function RootLayout({
   children,
@@ -28,7 +26,7 @@ export default function RootLayout({
           backgroundRepeat: "no-repeat",
         }}
       >
-        <AuthProvider>
+        <Providers>
           <Header />
           <div className="flex flex-1">
             {/*<Sidebar />*/}
@@ -36,7 +34,7 @@ export default function RootLayout({
             <main className="flex-1 p-6">{children}</main>
           </div>
           <Footer />
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
