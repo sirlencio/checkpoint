@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CheckCircle, XCircle, Eye, EyeOff } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,8 @@ export default function Login() {
 
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const {signInWithEmail} = useAuth();
 
   const emailValid = email.length >= 4;
   const passwordValid = password.length >= 6;
@@ -22,6 +25,7 @@ export default function Login() {
     setPasswordTouched(true);
 
     if (emailValid && passwordValid) {
+      signInWithEmail(email, password);
       console.log("Login enviado:", { email, password });
     }
   };
@@ -106,7 +110,9 @@ export default function Login() {
           {/* Remember me */}
           <div className="flex items-center gap-2">
             <input type="checkbox" className="w-4 h-4 accent-pink-600" />
-            <label className="text-gray-200 text-sm drop-shadow-[2px_2px_2px_black]">Remember me</label>
+            <label className="text-gray-200 text-sm drop-shadow-[2px_2px_2px_black]">
+              Remember me
+            </label>
           </div>
 
           {/* Button */}
@@ -122,12 +128,18 @@ export default function Login() {
         <div className="text-center mt-6 space-y-2 drop-shadow-[2px_2px_2px_black]">
           <p className="text-gray-300 text-sm">
             New User?{" "}
-            <a href="/register" className="text-cyan-700 hover:text-green-500 font-medium">
+            <a
+              href="/register"
+              className="text-cyan-700 hover:text-green-500 font-medium"
+            >
               Sign up here
             </a>
           </p>
 
-          <a href="#" className="block text-cyan-700 hover:text-green-500 text-sm">
+          <a
+            href="#"
+            className="block text-cyan-700 hover:text-green-500 text-sm"
+          >
             Forgot your password?
           </a>
         </div>

@@ -1,11 +1,14 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function getGameRow(supabase: SupabaseClient, id: number) {
-    return await supabase
+    const {data, error} = await supabase
         .from("games")
         .select("*")
         .eq("id", id)
         .single();
+
+        console.log(error)
+    return data;
 }
 
 export async function searchGame(supabase: SupabaseClient, name: string) {

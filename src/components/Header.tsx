@@ -5,10 +5,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 export default function Header() {
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const { user } = useAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,12 +52,20 @@ export default function Header() {
         <Link href="/" className="hover:text-green-400 transition">
           Inicio
         </Link>
-        <Link href="/login" className="hover:text-green-400 transition">
-          Log In
-        </Link>
-        <Link href="/register" className="hover:text-green-400 transition">
-          Register
-        </Link>
+        {user ? (
+          <Link href="/profile" className="hover:text-green-400 transition">
+            Profile {user.email}
+          </Link>
+        ) : (
+          <>
+            <Link href="/login" className="hover:text-green-400 transition">
+              Log In
+            </Link>
+            <Link href="/register" className="hover:text-green-400 transition">
+              Register
+            </Link>
+          </>
+        )}
       </nav>
     </header>
   );

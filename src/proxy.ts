@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
 
     const { pathname } = request.nextUrl;
     if ((pathname.startsWith("/profile"))) {
-        const token = request.cookies.get("sb-access-token");
+        const token = request.cookies.get("sb-pigflomlviodiudalesv-auth-token");
         if (!token) {
             return NextResponse.redirect(new URL("/login", request.url));
         }

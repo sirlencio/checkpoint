@@ -1,13 +1,15 @@
+"use client"
+
 import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "./providers/AuthProvider";
 
-export const metadata: Metadata = {
+/* export const metadata: Metadata = {
   title: "CheckPoint",
   description: "Tu tracker de videojuegos",
-};
+}; */
 
 export default function RootLayout({
   children,

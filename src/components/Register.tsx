@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CheckCircle, XCircle, Eye, EyeOff } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const {signUpNewUser} = useAuth();
 
   const [touched, setTouched] = useState({
     email: false,
@@ -28,6 +31,7 @@ export default function Register() {
     setTouched({ email: true, username: true, password: true, confirm: true });
 
     if (emailValid && usernameValid && passwordValid && confirmValid) {
+      signUpNewUser(email, password)
       console.log("Registro enviado:", { email, username, password });
     }
   };
