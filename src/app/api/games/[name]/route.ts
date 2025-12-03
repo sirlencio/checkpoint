@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchGames } from "@/lib/igdb";
 import { searchGame, upsertPartialGame } from "@/lib/repositories/gamesRepo";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/adminServer";
 import { insertMedia } from "@/lib/repositories/mediaRepo";
 
 export async function GET(

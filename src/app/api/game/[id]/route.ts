@@ -8,7 +8,7 @@ import { insertMedia } from "@/lib/repositories/mediaRepo";
 import { saveRelations } from "@/lib/repositories/relationsRepo";
 import { isStale } from "@/utils/isStale";
 import { buildFullGameFromDB } from "@/lib/repositories/buildFullGameFromDB";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/adminServer";
 import { linkFranchises, upsertFranchises } from "@/lib/repositories/franchiseRepo";
 
 const GAME_TYPES = [

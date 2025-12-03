@@ -10,5 +10,6 @@ export async function insertMedia(supabase: SupabaseClient, gameId: number, medi
     url: m.url
   }));
 
-  await supabase.from("media").upsert(rows);
+  const { error } = await supabase.from("media").upsert(rows);
+  if (error) console.log(error);
 }

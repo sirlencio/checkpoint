@@ -5,8 +5,7 @@ export async function saveRelations(supabase: SupabaseClient,
   relations: { id: number; type: string }[]
 ) {
   if (!relations.length) return;
-
-  await supabase
+  const { error } = await supabase
     .from("game_relations")
     .upsert(
       relations.map(rel => ({
@@ -15,5 +14,9 @@ export async function saveRelations(supabase: SupabaseClient,
         type: rel.type
       }))
     );
+  if (error) {
+    console.log(error)
+  }
+
 }
 

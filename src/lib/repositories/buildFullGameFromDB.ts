@@ -5,18 +5,19 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
   // ===========================
   // 1. Game principal
   // ===========================
-  const { data: game, error } = await supabase
+  const { data: game, error: errorMainGame } = await supabase
     .from("games")
     .select("*")
     .eq("id", id)
     .single();
 
   if (!game) return null;
+  if (errorMainGame) console.log(errorMainGame);
 
   // ===========================
   // 2. Géneros
   // ===========================
-  const { data: genres } = await supabase
+  const { data: genres, error: errorGenres } = await supabase
     .from("genres")
     .select("id, name, game_genres!inner(game_id)")
     .eq("game_genres.game_id", id);
@@ -24,10 +25,11 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
   const formattedGenres =
     genres?.map((g) => ({ id: g.id, name: g.name })) ?? [];
 
+  if (errorGenres) console.log(errorGenres);
   // ===========================
   // 3. Plataformas
   // ===========================
-  const { data: platforms } = await supabase
+  const { data: platforms, error: errorPlatforms } = await supabase
     .from("platforms")
     .select("id, name, game_platforms!inner(game_id)")
     .eq("game_platforms.game_id", id);
@@ -35,6 +37,7 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
   const formattedPlatforms =
     platforms?.map((p) => ({ id: p.id, name: p.name })) ?? [];
 
+  if (errorPlatforms) console.log(errorPlatforms);
   // ===========================
   // 4. Compañías
   // ===========================
@@ -53,7 +56,7 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
   // ===========================
   // 5. Media (cover, screenshots, videos)
   // ===========================
-  const { data: media } = await supabase
+  const { data: media, error: errorMedia } = await supabase
     .from("media")
     .select("*")
     .eq("game_id", id);
@@ -83,24 +86,29 @@ export async function buildFullGameFromDB(supabase: SupabaseClient, id: number):
     }
   });
 
+  if (errorMedia) console.log(errorMedia);
+
   // ===========================
   // 6. Relaciones extra
   // ===========================
-  const { data: remakes } = await supabase
+  const { data: remakes, error: errorRemake } = await supabase
     .from("game_remakes")
     .select("remake_id")
     .eq("game_id", id);
 
-  const { data: expansions } = await supabase
+  const { data: expansions,  error: errorExpansion} = await supabase
     .from("game_expansions")
     .select("expansion_id")
     .eq("game_id", id);
 
-  const { data: franchises } = await supabase
+  const { data: franchises, error: errorFranchise } = await supabase
     .from("game_franchises")
     .select("franchise_id")
     .eq("game_id", id);
 
+  if (errorRemake) console.log(errorRemake);
+  if (errorExpansion) console.log(errorExpansion);
+  if (errorFranchise) console.log(errorFranchise);
 
   return {
     id: game.id,

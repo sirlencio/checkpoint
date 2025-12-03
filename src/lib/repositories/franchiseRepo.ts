@@ -2,13 +2,14 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function upsertFranchises(supabase: SupabaseClient, franchises: { id: number; name: string }[]) {
     if (!franchises.length) return;
-    await supabase.from("franchises").upsert(franchises);
+    const { error } = await supabase.from("franchises").upsert(franchises);
+    if (error) console.log(error);
 }
 
 export async function linkFranchises(supabase: SupabaseClient, gameId: number, franchiseIds: { id: number; name: string }[]) {
     if (!franchiseIds.length) return;
 
-    await supabase
+    const { error } = await supabase
         .from("game_franchises")
         .upsert(
             franchiseIds.map(f => ({
@@ -17,4 +18,5 @@ export async function linkFranchises(supabase: SupabaseClient, gameId: number, f
             })),
             { onConflict: "game_id,franchise_id" }
         );
+    if (error) console.log(error);
 }
