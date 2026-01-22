@@ -41,7 +41,7 @@ export async function GET(
 
   try {
     // 1. Buscar en DB
-    const { data: gameInDB } = await getGameRow(supabase, id);
+    const gameInDB = await getGameRow(supabase, id);
 
     // 2. Si existe, comprobar si está completo
     if (gameInDB) {

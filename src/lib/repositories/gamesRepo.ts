@@ -5,9 +5,13 @@ export async function getGameRow(supabase: SupabaseClient, id: number) {
         .from("games")
         .select("*")
         .eq("id", id)
+        .limit(1)
         .single();
 
-    if (error) console.log(error);
+    if (error) {
+        console.log(error);
+        return null;
+    }
 
     return data;
 }
@@ -31,7 +35,10 @@ export async function searchGame(supabase: SupabaseClient, name: string) {
         .eq("media.type", "cover")
         .limit(10);
 
-    if (error) console.log(error);
+    if (error){
+        console.log(error);
+        return null;
+    } 
 
     return data;
 }

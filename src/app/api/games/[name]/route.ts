@@ -15,7 +15,7 @@ export async function GET(
     if (!name) return NextResponse.json({ error: "No search term provided" }, { status: 400 });
 
     // 1. Buscar en DB y en IGDB
-    const { data: gamesInDB } = await searchGame(supabase, name);
+    const gamesInDB = await searchGame(supabase, name);
     const dbGames = gamesInDB ?? [];
     const IGDBgames = await searchGames(name);
 
@@ -44,7 +44,7 @@ export async function GET(
     );
 
     // 4. Devolver todos los juegos encontrados
-    const { data: allGamesInDB } = await searchGame(supabase, name);
+    const allGamesInDB = await searchGame(supabase, name);
 
     // Transformar cover de array a objeto
     const gamesWithCover = (allGamesInDB ?? []).map(game => ({
