@@ -2,8 +2,11 @@
 import { useState } from "react";
 import { CheckCircle, XCircle, Eye, EyeOff } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -19,14 +22,17 @@ export default function Login() {
   const showEmailError = emailTouched && !emailValid;
   const showPasswordError = passwordTouched && !passwordValid;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setEmailTouched(true);
     setPasswordTouched(true);
 
     if (emailValid && passwordValid) {
-      signInWithEmail(email, password);
+      const {data,error} = await signInWithEmail(email, password);
       console.log("Login enviado:", { email, password });
+      if (!error) {
+        router.push("/");
+      }
     }
   };
 
