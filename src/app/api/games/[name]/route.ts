@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchGames } from "@/lib/igdb";
 import { searchGame, upsertPartialGame } from "@/lib/repositories/gamesRepo";
-import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/adminServer";
 import { insertMedia } from "@/lib/repositories/mediaRepo";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ name: string }> }
 ) {
+  const supabaseAdmin = await createAdminClient();
   const supabase = await createClient();
 
   try {
@@ -15,7 +17,7 @@ export async function GET(
     if (!name) return NextResponse.json({ error: "No search term provided" }, { status: 400 });
 
     // 1. Buscar en DB y en IGDB
-    const { data: gamesInDB } = await searchGame(supabase, name);
+    const gamesInDB = await searchGame(supabase, name);
     const dbGames = gamesInDB ?? [];
     const IGDBgames = await searchGames(name);
 
@@ -26,7 +28,7 @@ export async function GET(
     // 3. Insertar los juegos faltantes en DB
     await Promise.all(
       missingGames.map(async (g) => {
-        await upsertPartialGame(supabase, {
+        await upsertPartialGame(supabaseAdmin, {
           id: g.id,
           name: g.name,
           slug: g.slug,
@@ -36,7 +38,7 @@ export async function GET(
 
         // Insertar cover si existe
         if (g.cover?.id && g.cover?.url) {
-          await insertMedia(supabase, g.id, [
+          await insertMedia(supabaseAdmin, g.id, [
             { id: g.cover.id, type: "cover", url: g.cover.url },
           ]);
         }
@@ -44,7 +46,7 @@ export async function GET(
     );
 
     // 4. Devolver todos los juegos encontrados
-    const { data: allGamesInDB } = await searchGame(supabase, name);
+    const allGamesInDB = await searchGame(supabase, name);
 
     // Transformar cover de array a objeto
     const gamesWithCover = (allGamesInDB ?? []).map(game => ({

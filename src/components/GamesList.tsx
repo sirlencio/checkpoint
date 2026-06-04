@@ -2,12 +2,17 @@
 
 import { Game } from "@/types/game";
 import GameListItem from "./GameListItem";
-
+import GamesListSkeleton from "./GameListSkeleton";
 interface Props {
   games: Game[] | null;
+  loading?: boolean;
 }
 
-export default function GamesList({ games }: Props) {
+export default function GamesList({ games, loading }: Props) {
+  if (loading) {
+    return <GamesListSkeleton />;
+  }
+
   if (!games || games.length === 0) {
     return (
       <p className="text-center text-white mt-10">

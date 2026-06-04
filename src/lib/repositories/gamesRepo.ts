@@ -1,15 +1,23 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function getGameRow(supabase: SupabaseClient, id: number) {
-    return await supabase
+    const { data, error } = await supabase
         .from("games")
         .select("*")
         .eq("id", id)
+        .limit(1)
         .single();
+
+    if (error) {
+        console.log(error);
+        return null;
+    }
+
+    return data;
 }
 
 export async function searchGame(supabase: SupabaseClient, name: string) {
-    return await supabase
+    const { data, error } = await supabase
         .from("games")
         .select(`
       id,
@@ -26,6 +34,13 @@ export async function searchGame(supabase: SupabaseClient, name: string) {
         .ilike("name", `%${name}%`)
         .eq("media.type", "cover")
         .limit(10);
+
+    if (error){
+        console.log(error);
+        return null;
+    } 
+
+    return data;
 }
 
 
@@ -40,9 +55,13 @@ export async function upsertGame(supabase: SupabaseClient, game: {
     updated_at: string,
     is_completed: boolean,
 }) {
-    return await supabase
+    const { data, error } = await supabase
         .from("games")
         .upsert(game);
+
+    if (error) console.log(error);
+
+    return data;
 }
 
 export async function upsertPartialGame(
@@ -55,7 +74,7 @@ export async function upsertPartialGame(
         updated_at: string;
     }
 ) {
-    return await supabase.from("games").upsert({
+    const { data, error } = await supabase.from("games").upsert({
         id: game.id,
         name: game.name,
         slug: game.slug,
@@ -63,5 +82,9 @@ export async function upsertPartialGame(
         is_completed: false,
         updated_at: game.updated_at,
     });
+
+    if (error) console.log(error);
+
+    return data;
 }
 

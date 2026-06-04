@@ -4,6 +4,7 @@ import { useGames } from "@/hooks/useGames";
 import Image from "next/image";
 import { YouTubeEmbed } from '@next/third-parties/google'
 import { use } from "react";
+import GameDetailSkeleton from "@/components/GameDetailSkeleton";
 
 export default function GameDetailPage({
   params,
@@ -14,7 +15,7 @@ export default function GameDetailPage({
   const { games, loading, error } = useGames({ id: String(id) });
 
   if (loading)
-    return <p className="text-white text-center mt-10">Cargando...</p>;
+    return <GameDetailSkeleton />;
 
   if (error)
     return <p className="text-red-400 text-center mt-10">{error}</p>;
@@ -34,7 +35,7 @@ export default function GameDetailPage({
       }}
     >
       {/* Fondo difuminado */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md rounded-2xl overflow-hidden"></div>
 
       {/* Contenido principal */}
       <div className="relative z-10 max-w-6xl w-full mx-auto p-6 rounded-2xl bg-black/60 shadow-xl mt-20">

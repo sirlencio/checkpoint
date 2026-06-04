@@ -3,7 +3,7 @@
 import { use } from "react";
 import { useGames } from "@/hooks/useGames";
 import GamesList from "@/components/GamesList";
-
+import GamesListSkeleton from "@/components/GameListSkeleton";
 interface Props {
   params: Promise<{ gameName: string }>;
 }
@@ -22,9 +22,8 @@ export default function SearchPage({ params }: Props) {
           Resultados de búsqueda para &quot;{decodedName}&quot;
         </h1>
 
-        {loading && <p className="text-center text-white mt-10">Cargando...</p>}
+        {loading && <GamesListSkeleton count={5} />}
         {error && <p className="text-center text-red-400 mt-10">{error}</p>}
-
         {!loading && !error && <GamesList games={games} />}
       </div>
     </main>
