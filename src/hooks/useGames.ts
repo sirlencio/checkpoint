@@ -2,6 +2,7 @@
 
 import { Game } from "@/types/game";
 import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
 
 interface UseGamesParams {
   searchTerm?: string;
@@ -32,7 +33,14 @@ export const useGames = ({ searchTerm, id }: UseGamesParams = {}) => {
       const res = await fetch(endpoint);
 
       if (res.status === 429) {
-        throw new Error("Has superado el límite de peticiones. Inténtalo en unos segundos.");
+        toast.info("Has superado el límite de peticiones. Inténtalo de nuevo en unos segundos.",
+          {
+            id: "rate-limit",
+            descriptionClassName: "text-lg font-bold",
+            className: "px-60 py-40",
+          }
+        );
+        return;
       }
 
       if (!res.ok) {

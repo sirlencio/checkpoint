@@ -1,6 +1,8 @@
 export default function AboutCheckPoint() {
   return (
-    <section className="w-full py-20 px-6 ">
+    <section className="w-full py-20 px-6 rounded-2xl overflow-hidden bg-[url('https://wallpapers.com/images/featured/4k-gaming-33vov45f7zqi6t75.jpg')] 
+                        bg-cover bg-center bg-no-repeat">
+      
       <div className="max-w-5xl">
 
         <h2 className="text-6xl font-extrabold text-white mb-6 drop-shadow-[2px_2px_2px_black]">
@@ -8,7 +10,7 @@ export default function AboutCheckPoint() {
         </h2>
 
         <p className="text-lg font-bold text-gray-300 leading-relaxed mb-12 max-w-3xl drop-shadow-[2px_2px_2px_black]">
-          CheckPoint es un tracker creado por 2 amigos (Sirlencio y Nelius) y 1 maricón (Vandhal) para descubrir, seguir y organizar tus videojuegos favoritos.
+          CheckPoint es un tracker creado por 3 amigos para descubrir, seguir y organizar tus videojuegos favoritos.
           Aquí podrás explorar nuevos títulos, ver sus valoraciones, y llevar un control de los juegos que te interesan.
         </p>
 
