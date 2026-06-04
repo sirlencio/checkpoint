@@ -8,7 +8,8 @@ import { insertMedia } from "@/lib/repositories/mediaRepo";
 import { saveRelations } from "@/lib/repositories/relationsRepo";
 import { isStale } from "@/utils/isStale";
 import { buildFullGameFromDB } from "@/lib/repositories/buildFullGameFromDB";
-import { createClient } from "@/utils/supabase/adminServer";
+import { createAdminClient } from "@/utils/supabase/adminServer";
+import { createClient } from "@/utils/supabase/server";
 import { linkFranchises, upsertFranchises } from "@/lib/repositories/franchiseRepo";
 
 const GAME_TYPES = [
@@ -37,6 +38,7 @@ export async function GET(
   { params }: { params: Promise<{ id: number }> }
 ) {
   const { id } = await params;
+  const supabaseAdmin = await createAdminClient();
   const supabase = await createClient();
 
   try {
@@ -63,13 +65,13 @@ export async function GET(
 
       const parentGame = await getPartialGameById(game.parent_game);
       if (parentGame) {
-        await upsertPartialGame(supabase, parentGame);
-        await saveRelations(supabase, game.parent_game, [{ id: game.id, type }]);
+        await upsertPartialGame(supabaseAdmin, parentGame);
+        await saveRelations(supabaseAdmin, game.parent_game, [{ id: game.id, type }]);
       }
     }
 
     // 4. Guardar/actualizar datos principales
-    await upsertGame(supabase, {
+    await upsertGame(supabaseAdmin, {
       id: game.id,
       name: game.name,
       slug: game.slug,
@@ -82,15 +84,15 @@ export async function GET(
     });
 
     // 5. Guardar relaciones con géneros
-    await linkGameGenres(supabase, id, game.genres.map(g => g.id));
+    await linkGameGenres(supabaseAdmin, id, game.genres.map(g => g.id));
 
     // 6. Plataformas
-    await upsertPlatforms(supabase, game.platforms);
-    await linkGamePlatforms(supabase, id, game.platforms.map(p => p.id));
+    await upsertPlatforms(supabaseAdmin, game.platforms);
+    await linkGamePlatforms(supabaseAdmin, id, game.platforms.map(p => p.id));
 
     // 7. Compañías
-    await upsertCompanies(supabase, game.companies);
-    await linkCompanies(supabase, id, game.companies);
+    await upsertCompanies(supabaseAdmin, game.companies);
+    await linkCompanies(supabaseAdmin, id, game.companies);
 
     // 8. Media (cover, screenshots, videos)
     const allMedia = [
@@ -98,11 +100,11 @@ export async function GET(
       ...game.screenshots.map(s => ({ id: s.id, type: "screenshot", url: s.url })),
       ...game.videos.map(v => ({ id: v.id, type: "video", url: v.video_id })),
     ];
-    await insertMedia(supabase, id, allMedia);
+    await insertMedia(supabaseAdmin, id, allMedia);
 
     // 9. Franchises
-    await upsertFranchises(supabase, game.franchises);
-    await linkFranchises(supabase, id, game.franchises);
+    await upsertFranchises(supabaseAdmin, game.franchises);
+    await linkFranchises(supabaseAdmin, id, game.franchises);
 
     // 10. Relaciones con otros juegos
     const relations: { id: number; type: string }[] = [];
@@ -115,11 +117,11 @@ export async function GET(
 
     await Promise.all(relations.map(async rel => {
       const relatedGame = await getPartialGameById(rel.id);
-      if (relatedGame) await upsertPartialGame(supabase, relatedGame);
+      if (relatedGame) await upsertPartialGame(supabaseAdmin, relatedGame);
     }));
 
     if (relations.length) {
-      await saveRelations(supabase, id, relations);
+      await saveRelations(supabaseAdmin, id, relations);
     }
 
     // 11. Reconstruir desde DB
