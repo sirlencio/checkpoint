@@ -31,7 +31,7 @@ export default function Register() {
     setTouched({ email: true, username: true, password: true, confirm: true });
 
     if (emailValid && usernameValid && passwordValid && confirmValid) {
-      signUpNewUser(email, password)
+      signUpNewUser(email, password, username)
       console.log("Registro enviado:", { email, username, password });
     }
   };

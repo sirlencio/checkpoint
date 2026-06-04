@@ -30,12 +30,16 @@ const useAuth = () => {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  const signUpNewUser = async (email: string, password: string) => {
+  const signUpNewUser = async (email: string, password: string, username: string) => {
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: 'http://localhost:3000/auth/confirm' },
+      options: {
+        emailRedirectTo: 'http://localhost:3000/auth/confirm', data: {
+          username: username
+        }
+      },
     });
     if (error) setError(error.message);
     setLoading(false);
