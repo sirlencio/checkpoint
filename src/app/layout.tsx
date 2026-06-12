@@ -27,7 +27,6 @@ export default function RootLayout({
           <Header />
           <div className="flex flex-1">
             {/*<Sidebar />*/}
-            {/* Comentario */}
             <main className="flex-1 p-6">{children}</main>
           </div>
           <Footer />
