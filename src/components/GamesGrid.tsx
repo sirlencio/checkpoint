@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useGames } from "@/hooks/useGames";
-import GameGridItem from "./GameGridItem";
-import GameGridSkeleton from "./GameGridSkeleton";
+import { useGames } from '@/hooks/useGames';
+import GameGridItem from './GameGridItem';
+import GameGridSkeleton from './GameGridSkeleton';
 
 export default function GameGrid() {
   const { games, loading, error } = useGames();
@@ -12,19 +12,11 @@ export default function GameGrid() {
   }
 
   if (error) {
-    return (
-      <p className="text-center text-red-400 mt-10">
-        Error: {error}
-      </p>
-    );
+    return <p className="text-center text-red-400 mt-10">Error: {error}</p>;
   }
 
   if (!games || games.length === 0) {
-    return <GameGridSkeleton />; /*(
-      <p className="text-center text-white mt-10">
-        No hay juegos disponibles.
-      </p>
-    );*/
+    return <GameGridSkeleton />;
   }
   return (
     <div className="p-8">

@@ -61,8 +61,8 @@ export default function Header() {
         </Link>
 
         {user ? (
-          <Link href={`/profile/${user.id}`} className="hover:text-green-400 transition">
-            Profile {user.email}
+          <Link href={`/profile/${user.username}`} className="hover:text-green-400 transition">
+            Profile {user.username || user.email}
           </Link>
         ) : (
           <>

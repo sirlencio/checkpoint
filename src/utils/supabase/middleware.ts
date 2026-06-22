@@ -35,7 +35,7 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims
   const pathname = request.nextUrl.pathname;
 
-  if (pathname.startsWith("/profile")) {
+  if (pathname.startsWith("/settings")) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";

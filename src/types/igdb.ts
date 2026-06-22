@@ -10,7 +10,7 @@ export interface RawScreenshots {
 
 export interface RawInvolvedCompany {
     id: number;
-    company: number;          // ID real de la compañía (tabla companies)
+    company: number;
     developer?: boolean;
     publisher?: boolean;
     supporting?: boolean;

@@ -1,7 +1,11 @@
-"use client";
+'use client';
 
-import { AuthProvider } from "./AuthProvider";
+import { AuthProvider } from './AuthProvider';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+interface Props {
+  readonly children: React.ReactNode;
+}
+
+export default function Providers({ children }: Props) {
   return <AuthProvider>{children}</AuthProvider>;
 }

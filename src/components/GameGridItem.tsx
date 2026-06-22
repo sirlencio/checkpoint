@@ -1,6 +1,6 @@
-import { Game } from "@/types/game";
-import Image from "next/image";
-import Link from "next/link";
+import { Game } from '@/types/game';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Props {
   game: Game;
@@ -26,7 +26,9 @@ const GameGridItem = ({ game }: Props) => {
       )}
 
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-        <h3 className="text-lg font-bold text-white drop-shadow-[2px_2px_2px_black]">{game.name}</h3>
+        <h3 className="text-lg font-bold text-white drop-shadow-[2px_2px_2px_black]">
+          {game.name}
+        </h3>
 
         {game.total_rating && (
           <p className="text-sm text-gray-300 mt-1">
